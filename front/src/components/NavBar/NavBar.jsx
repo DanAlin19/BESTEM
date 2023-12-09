@@ -41,9 +41,9 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-screen flex items-center justify-between p-4 bg-slate-900 text-slate-100 top-0 z-20 overflow-x-hidden my-auto">
+    <div className={`w-screen flex items-center justify-between p-4 bg-gradient-to-b ${isLoginOrRegister ? 'bg-slate-900' : 'from-slate-900 via-slate-900 to-black'} text-slate-100 top-0 z-20 overflow-x-hidden my-auto`}>
       <div>
-        <button className={`flex items-center bg-${isTapped ? 'slate-900' : 'slate-100'} text-${isTapped ? 'slate-100' : 'slate-900'} text-xl cursor-pointer  min-[700px]:hover:bg-slate-100 min-[700px]:hover:text-slate-900 rounded-lg min-[700px]:hover:scale-105 transition-all duration-300 p-4`} onClick={handleClick}>
+        <button className={`flex items-center ${isLoginOrRegister ? 'bg-slate-900' : 'from-slate-900 via-slate-900 to-teal-500'}  text-teal-500 font-bold text-xl cursor-pointer  min-[700px]:hover:bg-teal-500 min-[700px]:hover:text-slate-900 rounded-lg min-[700px]:hover:scale-105 transition-all duration-300 p-4`} onClick={handleClick}>
           <FaShieldAlt className="mr-2" />
           GuardVPN
         </button>
@@ -52,7 +52,7 @@ const Navbar = () => {
         {userToken ? (
           <RouterLink
             to="dashboard"
-            className="nav-link cursor-pointer  hover:bg-slate-100 hover:text-slate-900 rounded-lg hover:scale-105 transition-all duration-300 text-xl p-4"
+            className="nav-link cursor-pointer text-teal-500 font-bold hover:bg-teal-500 hover:text-slate-900 rounded-lg hover:scale-105 transition-all duration-300 text-xl p-4"
           >
             Dashboard
           </RouterLink>
@@ -60,13 +60,13 @@ const Navbar = () => {
           <>
             <RouterLink
               to="login"
-              className="nav-link cursor-pointer  hover:bg-slate-100 hover:text-slate-900 rounded-lg hover:scale-105 transition-all duration-300 text-xl p-4"
+              className="nav-link cursor-pointer text-teal-500 font-bold  hover:bg-teal-500 hover:text-slate-900 rounded-lg hover:scale-105 transition-all duration-300 text-xl p-4"
             >
               Login
             </RouterLink>
             <RouterLink
               to="register"
-              className="nav-link cursor-pointer  hover:bg-slate-100 hover:text-slate-900 rounded-lg hover:scale-105 transition-all duration-300 text-xl p-4"
+              className="nav-link cursor-pointe text-teal-500 font-bold hover:bg-teal-500 hover:text-slate-900 rounded-lg hover:scale-105 transition-all duration-300 text-xl p-4"
             >
               Register
             </RouterLink>
