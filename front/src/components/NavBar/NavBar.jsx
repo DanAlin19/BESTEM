@@ -1,5 +1,5 @@
-import { Link, animateScroll as scroll } from "react-scroll";
-import { Link as RouterLink } from "react-router-dom";
+import { animateScroll as scroll } from "react-scroll";
+import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaShieldAlt } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -16,6 +16,9 @@ const Navbar = () => {
     const token = localStorage.getItem("userToken");
     setUserToken(token);
   }, []);
+  const history = useNavigate();
+  const location = useLocation();
+  const isLoginOrRegister = location.pathname === '/login' || location.pathname === '/register';
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -27,15 +30,20 @@ const Navbar = () => {
     setTimeout(() => setIsTapped(true), 1000);
   };
 
+  const handleClick = () => {
+    if (isLoginOrRegister) {
+      // If in /login or /register, go back to the main page
+      history('/');
+    } else {
+      // Otherwise, scroll to the top as before
+      scrollToTop();
+    }
+  };
+
   return (
-    <div className="w-screen flex items-center justify-between p-4 bg-slate-900 text-slate-100 fixed top-0 z-20 overflow-x-hidden my-auto">
+    <div className="w-screen flex items-center justify-between p-4 bg-slate-900 text-slate-100 top-0 z-20 overflow-x-hidden my-auto">
       <div>
-        <button
-          className={`flex items-center bg-${
-            isTapped ? "slate-900" : "slate-100"
-          } text-${isTapped ? "slate-100" : "slate-900"} text-xl cursor-pointer  min-[700px]:hover:bg-slate-100 min-[700px]:hover:text-slate-900 rounded-lg min-[700px]:hover:scale-105 transition-all duration-300 p-4`}
-          onClick={scrollToTop}
-        >
+        <button className={`flex items-center bg-${isTapped ? 'slate-900' : 'slate-100'} text-${isTapped ? 'slate-100' : 'slate-900'} text-xl cursor-pointer  min-[700px]:hover:bg-slate-100 min-[700px]:hover:text-slate-900 rounded-lg min-[700px]:hover:scale-105 transition-all duration-300 p-4`} onClick={handleClick}>
           <FaShieldAlt className="mr-2" />
           GuardVPN
         </button>
