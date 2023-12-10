@@ -65,7 +65,7 @@ def login_user():
 
     except Exception as e:
         return jsonify({'message': 'error', 'error': str(e)})
-
+    
 
 @app.route('/')
 def hello():
