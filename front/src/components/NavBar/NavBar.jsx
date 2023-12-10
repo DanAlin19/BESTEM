@@ -13,7 +13,7 @@ const Navbar = () => {
 
   useEffect(() => {
     // Check local storage for the user token
-    const token = localStorage.getItem("userToken");
+    const token = localStorage.getItem("token");
     setUserToken(token);
   }, []);
   const history = useNavigate();
