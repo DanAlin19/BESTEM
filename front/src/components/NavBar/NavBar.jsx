@@ -33,7 +33,12 @@ const Navbar = () => {
   const handleClick = () => {
     if (isLoginOrRegister) {
       // If in /login or /register, go back to the main page
-      history('/');
+      if(location.pathname === '/dashboard') {
+        history('/dashboard');
+      }
+      else{
+        history('/');
+      }
     } else {
       // Otherwise, scroll to the top as before
       scrollToTop();
