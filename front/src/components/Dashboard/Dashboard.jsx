@@ -4,13 +4,43 @@ import Modal from './Modal';
 
 function Dashboard() {
   const [tableData, setTableData] = useState([]);
-  const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    fetch('/api/devices')
-      .then((response) => response.json())
-      .then((data) => setTableData(data))
-      .catch((error) => console.error('Error fetching data:', error));
+    const fetchUserDevices = async () => {
+      try {
+        const token = localStorage.getItem('token');
+  
+        if (!token) {
+          console.error('Token not available');
+          return;
+        }
+  
+        const response = await fetch('http://207.154.232.144:5001/get_Userdevices', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token }),
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+  
+          if (data.devices && Array.isArray(data.devices)) {
+            setTableData(data.devices);
+            console.log(tableData);
+          } else {
+            console.error('Invalid data format:', data);
+          }
+        } else {
+          console.error('Error fetching user devices:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error.message);
+      }
+    };
+  
+    fetchUserDevices();
   }, []);
 
   return (
@@ -35,12 +65,12 @@ function Dashboard() {
           </thead>
           <tbody>
             {tableData.map((item) => (
-              <tr key={item.id} className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
-                <td className='px-6 py-4'>{item.deviceName}</td>
-                <td className='px-6 py-4'>{item.assignedIP}</td>
-                <td className='px-6 py-4'>{item.publicKey}</td>
+              <tr key={item.device_id} className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
+                <td className='px-6 py-4'>{item.nume}</td>
+                <td className='px-6 py-4'>{item.IpAddress}</td>
+                <td className='px-6 py-4'>{item.Publickey}</td>
                 <td className='px-6 py-4'>
-                  <button onClick={() => handleAction(item.id)}>Action</button>
+                  <button onClick={() => handleAction(item.device_id)}>DELETE</button>
                 </td>
               </tr>
             ))}

@@ -18,13 +18,10 @@ function Login() {
 
   const handleSubmitToServer = async (e) => {
     e.preventDefault();
-
-    // Check if passwords match
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
     } else {
       try {
-        // Make an API request to your registration endpoint using fetch
         const email = e.target.email.value;
         const password = e.target.password.value;
         const response = await fetch("http://207.154.232.144:5001/register_user", {
@@ -37,15 +34,10 @@ function Login() {
             password,
           }),
         });
-
-        // Handle the response (success or failure) as needed
         const data = await response.json();
         if (data.message === "success") {
-          // Registration was successful
-          // Redirect to login page
           history('/login');
         } else {
-          // Registration was not successful
           setError("Registration failed. Please try again.");
         }
       } catch (error) {
