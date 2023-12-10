@@ -4,6 +4,7 @@ import Register from "./components/Register/Register"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/NavBar/NavBar";
 import Hero from "./components/Hero/Hero";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/" element={<Hero/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
+                <Route path="/dashboard" element={<Dashboard/>}/>
             </Routes>
         </BrowserRouter>
     </>

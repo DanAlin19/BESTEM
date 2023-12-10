@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 function Hero() {
   return (
     <>
-      <div className="h-screen w-screen relative flex items-center justify-center">
+      <div className="h-screen w-full relative flex items-center justify-center">
         <video
           className="w-full h-screen object-cover absolute top-0 left-0"
           autoPlay
