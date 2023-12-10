@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { FaShieldAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-    const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [password, setPassword] = useState("");
+  const history = useNavigate();
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -14,16 +16,44 @@ function Login() {
     setConfirmPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmitToServer = async (e) => {
     e.preventDefault();
 
     // Check if passwords match
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError("Passwords do not match.");
     } else {
-      setError('');
-      // Perform your form submission logic here
+      try {
+        // Make an API request to your registration endpoint using fetch
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        const response = await fetch("http://207.154.232.144:5001/register_user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+
+        // Handle the response (success or failure) as needed
+        const data = await response.json();
+        if (data.message === "success") {
+          // Registration was successful
+          // Redirect to login page
+          history('/login');
+        } else {
+          // Registration was not successful
+          setError("Registration failed. Please try again.");
+        }
+      } catch (error) {
+        setError("Registration failed. Please try again.");
+        console.error(error);
+      }
     }
+    e.target.reset
   };
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
@@ -40,7 +70,11 @@ function Login() {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-teal-500 md:text-2xl">
               Create and account
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleSubmit}>
+            <form
+              className="space-y-4 md:space-y-6"
+              action="#"
+              onSubmit={handleSubmitToServer}
+            >
               <div>
                 <label
                   for="email"
@@ -73,9 +107,8 @@ function Login() {
                   className="bg-gray-50 border border-gray-300 text-teal-500 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   pattern="/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/"
                   required=""
-                  value = {password}
-                  onChange = {handlePasswordChange}
-
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </div>
               <div>
@@ -97,7 +130,7 @@ function Login() {
                   onChange={handleConfirmPasswordChange}
                 />
               </div>
-              {error && <div style={{ color: 'red' }}>{error}</div>}
+              {error && <div style={{ color: "red" }}>{error}</div>}
               <button
                 type="submit"
                 className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

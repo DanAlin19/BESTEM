@@ -18,7 +18,8 @@ const Navbar = () => {
   }, []);
   const history = useNavigate();
   const location = useLocation();
-  const isLoginOrRegister = location.pathname === '/login' || location.pathname === '/register';
+  const isLoginOrRegister = location.pathname === '/login' || location.pathname === '/register'
+                              || location.pathname === '/dashboard';
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
