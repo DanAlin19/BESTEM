@@ -166,8 +166,8 @@ def update_wg_conf(allowed_ips, public_key):
             f'echo "\\n[Peer]\\nAllowedIPs = {allowed_ips}/32\\nPublicKey = {public_key}\\n" >> /etc/wireguard/wg0.conf'
         ]
         subprocess.run(command, check=True)
-        subprocess.run(['wg-quick', 'down', 'wg0'], check=True)
-        subprocess.run(['wg-quick', 'up', 'wg0'], check=True)
+        subprocess.run(['sudo','wg-quick', 'down', 'wg0'], check=True)
+        subprocess.run(['sudo','wg-quick', 'up', 'wg0'], check=True)
         return jsonify({'message': 'success'})
     except subprocess.CalledProcessError as e:
         return jsonify({'message': 'error', 'error': str(e)})
