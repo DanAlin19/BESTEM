@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, url_for, redirect, session
 from flask_cors import CORS
 from pymongo import MongoClient
 from bson import json_util
@@ -7,9 +7,24 @@ import datetime
 from jwt import decode, ExpiredSignatureError
 import os
 import subprocess
+# from authlib.integrations.flask_client import OAuth
 
 app = Flask(__name__)
+# app.secret_key = 'random_secret'
+
+# oath = OAuth()
 CORS(app)
+# google = oath.register(
+#     name='google',
+#     client_id='',
+#     client_secret='',
+#     access_token_url='https://accounts.google.com/o/oauth2/token',
+#     access_token_params=None,
+#     authorize_url='https://accounts.google.com/o/oauth2/auth',
+#     authorize_params=None,
+#     api_base_url='https://www.googleapis.com/oauth2/v1/',
+#     client_kwargs={'scope': 'openid email profile'},
+# )
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client['bestem']
@@ -17,6 +32,22 @@ users_collection = db['users']
 devices_collection = db['devices']
 
 SECRET_KEY = 'secretdiscret'
+
+# @app.route('/login')
+# def login():
+#     google = oauth.create_client('google')
+#     redirect_uri = url_for('authorize', _external=True)
+#     return google.authorize_redirect(redirect_uri)
+
+# @app.route('/authorize')
+# def authorize():
+#     google = oauth.create_client('google')
+#     token = google.authorize_access_token()
+#     resp = google.get('userinfo')
+#     resp.raise_for_status()
+#     user_info = resp.json()
+#     # do something with the token and profile
+#     return redirect('/')
 
 def generate_token(user_id):
     payload = {
@@ -135,18 +166,16 @@ def get_latestID_device():
         return 0
     
 def incrementIP():
-    try:
-        devices = list(devices_collection.find({}, {'_id': False}))
-        num = list(map(int,devices[-1]['IpAddress']).split('.'))
-        num[3] += 1
-        for i in range(3, 0, -1):
-            if num[i] == 256:
-                num[i] = 0
-                num[i-1] += 1
-        result_string = ".".join(map(str, num))
-        return result_string
-    except:
-        return "10.0.0.2"
+    devices = list(devices_collection.find({}, {'_id': False}))
+    num = list(map(int,devices[-1]['IpAddress'].split('.')))
+    num[3] += 1
+    for i in range(3, 0, -1):
+        if num[i] == 256:
+            num[i] = 0
+            num[i-1] += 1
+    result_string = ".".join(map(str, num))
+    return result_string
+        
 
 def gen_keys():
     os.umask(0o077)
@@ -180,6 +209,7 @@ def create_device():
 
         token = data.get('token')
         nume = data.get('nume')
+        public_key = data.get('public_key')
         
         if not token:
             return jsonify({'message': 'error', 'error': 'Token is required'})
@@ -195,9 +225,12 @@ def create_device():
             return jsonify({'message': 'error', 'error': str(e)})
 
         device_id = get_latestID_device()
-        ip_address = incrementIP()
+        if device_id == 0:
+            ip_address = "10.0.0.2"
+        else:
+            ip_address = incrementIP()
         private_key = gen_keys()[0]
-        public_key = gen_keys()[1]
+        # public_key = gen_keys()[1]
     
         devices_collection.insert_one({
             'id': device_id,
