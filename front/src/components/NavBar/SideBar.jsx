@@ -2,7 +2,7 @@ import { Link } from "react-scroll";
 import "../../index.css";
 
 function SideBar(props) {
-  const userToken = localStorage.getItem("userToken");
+  const userToken = localStorage.getItem("token");
 
   return (
     <div className="fixed flex flex-col z-40 bg-slate-900 text-white top-20 right-0 rounded-lg">
