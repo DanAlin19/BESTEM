@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { FaShieldAlt } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -17,8 +19,6 @@ function Login() {
     e.preventDefault();
 
     try {
-      console.log(email);
-      console.log(password);
       const response = await fetch("http://207.154.232.144:5001/login_user", {
         method: "POST",
         headers: {
@@ -33,9 +33,9 @@ function Login() {
           localStorage.setItem("token", data.token);
           window.location.href = "/dashboard";
         }
-        console.log("Login successful!");
-      } else {
-        console.error("Login failed:", response.statusText);
+        else {
+          toast.error(data.error, { position: toast.POSITION.TOP_CENTER });
+        } 
       }
     } catch (error) {
       console.error("Error during login:", error.message);
@@ -109,6 +109,7 @@ function Login() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </section>
   );
 }
