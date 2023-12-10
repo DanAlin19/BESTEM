@@ -3,7 +3,13 @@ import React, { useState } from 'react';
 export default function Modal() {
     const [showModal, setShowModal] = React.useState(false);
     const [nume, setDeviceName] = useState('');
+    const [public_key, setPublicKey] = useState('')
     const [data, setData] = useState(null);
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        window.location.reload();
+      };
 
     const handleDeviceSubmit = async () => {
         try {
@@ -18,7 +24,7 @@ export default function Modal() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ nume, token }),
+                body: JSON.stringify({ nume, token, public_key }),
             });
 
             if (response.ok) {
@@ -71,7 +77,7 @@ export default function Modal() {
                                             <pre>
                                                 {`
 [Interface]
-PrivateKey = ${data.private_key}
+PrivateKey = your_private_key
 Address = ${data.ip_address}
 DNS = 8.8.8.8
 
@@ -93,6 +99,15 @@ Endpoint = 207.154.232.144:5100
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                                 required
                                             />
+                                            <input
+                                                value={public_key}
+                                                onChange={(e) => setPublicKey(e.target.value)}
+                                                type="text"
+                                                name="public_key"
+                                                id="public_key"
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                required
+                                            />
                                         </>
                                     )}
                                 </div>
@@ -100,17 +115,19 @@ Endpoint = 207.154.232.144:5100
                                     <button
                                         className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         type="button"
-                                        onClick={() => setShowModal(false)}
+                                        onClick={() => handleCloseModal()}
                                     >
                                         Close
                                     </button>
-                                    <button
+                                    {data ? <></> : <button
                                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         type="button"
                                         onClick={() => handleDeviceSubmit()}
                                     >
                                         Generate
                                     </button>
+                                    }
+                                    
                                 </div>
                             </div>
                         </div>
