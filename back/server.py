@@ -161,11 +161,13 @@ def gen_keys():
 
 def update_wg_conf(allowed_ips, public_key):
     try:
-        with open('/etc/wireguard/wg0.conf', 'w') as f:
-            f.write('\n[Peer]\n')
-            f.write('AllowedIPs =' + allowed_ips + '\n')
-            f.write('PublicKey =' + public_key + '\n')
-    except Exception as e:
+        command = [
+            'sudo', 'sh', '-c',
+            f'echo -e "\\n[Peer]\\nAllowedIPs = {allowed_ips}\\nPublicKey = {public_key}\\n" >> /etc/wireguard/wg0.conf'
+        ]
+        subprocess.run(command, check=True)
+        return jsonify({'message': 'success'})
+    except subprocess.CalledProcessError as e:
         return jsonify({'message': 'error', 'error': str(e)})
         
 
